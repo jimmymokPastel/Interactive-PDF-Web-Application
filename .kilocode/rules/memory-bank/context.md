@@ -14,23 +14,27 @@ The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. I
 - [x] ESLint configuration
 - [x] Memory bank documentation
 - [x] Recipe system for common features
+- [x] Interactive PDF viewer with pdfjs-dist (popup + multiple-choice interactions)
+- [x] Data-driven config system (PDFViewerConfig) for reusable PDF interactions
+- [x] Three interactions: optimistic popup, duration popup, minute/minutes choice
 
 ## Current Structure
 
 | File/Directory | Purpose | Status |
 |----------------|---------|--------|
-| `src/app/page.tsx` | Home page | ✅ Ready |
+| `src/app/page.tsx` | Home page (renders PDFPage) | ✅ Ready |
 | `src/app/layout.tsx` | Root layout | ✅ Ready |
 | `src/app/globals.css` | Global styles | ✅ Ready |
+| `src/components/PDFPage.tsx` | Client wrapper with PDF config | ✅ Ready |
+| `src/components/InteractivePDFViewer.tsx` | Core PDF viewer component | ✅ Ready |
+| `src/lib/pdf-interactions.ts` | TypeScript types for interaction config | ✅ Ready |
+| `src/lib/empty.ts` | Empty module alias for `canvas` (pdfjs-dist) | ✅ Ready |
+| `public/pdf/` | PDF directory — place `document.pdf` here | ⚠️ Needs PDF |
 | `.kilocode/` | AI context & recipes | ✅ Ready |
 
 ## Current Focus
 
-The template is ready. Next steps depend on user requirements:
-
-1. What type of application to build
-2. What features are needed
-3. Design/branding preferences
+Interactive PDF viewer implemented and deployed. The PDF file must be placed at `public/pdf/document.pdf` to be served at `/pdf/document.pdf`.
 
 ## Quick Start Guide
 
@@ -85,3 +89,4 @@ export async function GET() {
 | Date | Changes |
 |------|---------|
 | Initial | Template created with base setup |
+| 2026-03-18 | Interactive PDF viewer built with pdfjs-dist; three interactions configured |
