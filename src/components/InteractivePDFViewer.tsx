@@ -142,87 +142,6 @@ function PopupOverlay({
 }
 
 // ---------------------------------------------------------------------------
-// Sub-component: Inline choice chips (rendered directly on the document)
-// ---------------------------------------------------------------------------
-function InlineChoiceChips({
-  options,
-  state,
-  onSelect,
-  feedbackCorrect,
-  feedbackIncorrect,
-}: {
-  options: ChoiceOption[];
-  state: ChoiceState;
-  onSelect: (label: string) => void;
-  feedbackCorrect?: string;
-  feedbackIncorrect?: string;
-}) {
-  const selectedOption = options.find((o) => o.label === state.selected);
-  const isCorrect = selectedOption?.correct ?? false;
-
-  return (
-    <div
-      className="absolute z-20 flex flex-row flex-wrap items-center gap-0.5"
-      style={{ top: 0, left: 0, whiteSpace: "nowrap" }}
-      onClick={(e) => e.stopPropagation()}
-    >
-      {options.map((opt) => {
-        const isSelected = state.selected === opt.label;
-
-        let chipClass =
-          "inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded border text-[10px] leading-none font-semibold cursor-pointer select-none transition-colors ";
-
-        if (state.locked) {
-          if (isSelected && opt.correct) {
-            chipClass += "bg-green-100 border-green-500 text-green-800";
-          } else if (isSelected && !opt.correct) {
-            chipClass += "bg-red-100 border-red-500 text-red-800";
-          } else if (!isSelected && opt.correct) {
-            chipClass += "bg-green-50 border-green-400 text-green-700";
-          } else {
-            chipClass += "bg-gray-50 border-gray-200 text-gray-400";
-          }
-        } else {
-          chipClass += "bg-white border-gray-300 text-gray-700 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700";
-        }
-
-        return (
-          <button
-            key={opt.label}
-            className={chipClass}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (!state.locked) onSelect(opt.label);
-            }}
-            disabled={state.locked}
-            title={state.locked ? undefined : "Select this answer"}
-          >
-            {state.locked && isSelected && (
-              <span>{opt.correct ? "✓" : "✗"}</span>
-            )}
-            {state.locked && !isSelected && opt.correct && (
-              <span>✓</span>
-            )}
-            {opt.label}
-          </button>
-        );
-      })}
-      {state.locked && state.selected && (
-        <span
-          className={`ml-1 text-[9px] font-bold px-1 py-0.5 rounded ${
-            isCorrect ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-          }`}
-        >
-          {isCorrect
-            ? (feedbackCorrect ?? "Correct!")
-            : (feedbackIncorrect ?? "Wrong")}
-        </span>
-      )}
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 export default function InteractivePDFViewer({ config }: { config: PDFViewerConfig }) {
@@ -426,14 +345,29 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
               const isLocked = choiceState.locked;
 
               if (isChoice) {
-                // Choice: render inline chips directly on the document at the word position.
-                // No highlight box — chips are always visible and replace the word visually.
+                // Choice: clickable highlight on the word. Click to select answer.
                 const choiceInteraction = interaction.interaction as {
                   type: "choice";
                   options: ChoiceOption[];
                   feedbackCorrect?: string;
                   feedbackIncorrect?: string;
                 };
+                const selectedOption = choiceInteraction.options.find(
+                  (o) => o.label.toLowerCase() === region.matchedText.toLowerCase()
+                );
+                const isCorrect = selectedOption?.correct ?? false;
+
+                let highlightClass = "w-full h-full cursor-pointer rounded-sm transition-colors ";
+                if (isLocked) {
+                  if (isCorrect) {
+                    highlightClass += "bg-green-400/50 border-2 border-green-600";
+                  } else {
+                    highlightClass += "bg-red-400/50 border-2 border-red-600";
+                  }
+                } else {
+                  highlightClass += "bg-yellow-200/60 border border-yellow-400 hover:bg-yellow-300/70";
+                }
+
                 return (
                   <div
                     key={key}
@@ -441,20 +375,30 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
                     style={{
                       left: `${region.x}%`,
                       top: `${region.y}%`,
-                      // Width is unconstrained so chips can overflow the matched word width
-                      width: 0,
+                      width: `${region.w}%`,
                       height: `${region.h}%`,
+                      minWidth: 24,
                       minHeight: 16,
-                      overflow: "visible",
                     }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!isLocked) {
+                        handleChoiceSelect(key, region.matchedText);
+                      }
+                    }}
+                    title={isLocked ? undefined : "Click to select answer"}
                   >
-                    <InlineChoiceChips
-                      options={choiceInteraction.options}
-                      state={choiceState}
-                      onSelect={(label: string) => handleChoiceSelect(key, label)}
-                      feedbackCorrect={choiceInteraction.feedbackCorrect}
-                      feedbackIncorrect={choiceInteraction.feedbackIncorrect}
-                    />
+                    <div className={highlightClass} />
+                    {isLocked && (
+                      <span
+                        className={`absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center text-[10px] font-bold rounded-full text-white ${
+                          isCorrect ? "bg-green-500" : "bg-red-500"
+                        }`}
+                        style={{ transform: "translate(50%, -50%)" }}
+                      >
+                        {isCorrect ? "✓" : "✗"}
+                      </span>
+                    )}
                   </div>
                 );
               }
