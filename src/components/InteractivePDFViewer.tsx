@@ -357,16 +357,8 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
                 );
                 const isCorrect = selectedOption?.correct ?? false;
 
-                let highlightClass = "w-full h-full cursor-pointer rounded-sm transition-colors ";
-                if (isLocked) {
-                  if (isCorrect) {
-                    highlightClass += "bg-green-400/50 border-2 border-green-600";
-                  } else {
-                    highlightClass += "bg-red-400/50 border-2 border-red-600";
-                  }
-                } else {
-                  highlightClass += "bg-yellow-200/60 border border-yellow-400 hover:bg-yellow-300/70";
-                }
+                // When locked, hide the highlight and show only the badge
+                const showHighlight = !isLocked;
 
                 return (
                   <div
@@ -388,13 +380,14 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
                     }}
                     title={isLocked ? undefined : "Click to select answer"}
                   >
-                    <div className={highlightClass} />
+                    {showHighlight && (
+                      <div className="w-full h-full cursor-pointer rounded-sm bg-yellow-200/60 border border-yellow-400 hover:bg-yellow-300/70 transition-colors" />
+                    )}
                     {isLocked && (
                       <span
-                        className={`absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center text-[10px] font-bold rounded-full text-white ${
+                        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-xs font-bold rounded-full text-white ${
                           isCorrect ? "bg-green-500" : "bg-red-500"
                         }`}
-                        style={{ transform: "translate(50%, -50%)" }}
                       >
                         {isCorrect ? "✓" : "✗"}
                       </span>
