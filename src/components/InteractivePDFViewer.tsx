@@ -222,12 +222,23 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
   const [popupStates, setPopupStates] = useState<Record<string, PopupState>>({});
   const [choiceStates, setChoiceStates] = useState<Record<string, ChoiceState>>({});
   const renderInProgress = useRef(false);
+  // Track the previous source so we can reset interaction state on file change
+  const prevSrcRef = useRef<string | ArrayBuffer | null>(null);
+
+  // Reset interaction state when the PDF source changes
+  if (prevSrcRef.current !== config.src) {
+    prevSrcRef.current = config.src;
+    // These will be batched by React on the first render for a new src
+  }
 
   const renderPDF = useCallback(async () => {
     if (renderInProgress.current) return;
     renderInProgress.current = true;
     setLoading(true);
     setError(null);
+    // Clear previous interaction state for the new document
+    setPopupStates({});
+    setChoiceStates({});
 
     try {
       const pdfjs = await import("pdfjs-dist");
@@ -236,7 +247,12 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
         import.meta.url
       ).toString();
 
-      const loadingTask = pdfjs.getDocument(config.src);
+      // pdfjs accepts a string URL or a typed-array/ArrayBuffer via `data`
+      const src = config.src;
+      const loadingTask =
+        typeof src === "string"
+          ? pdfjs.getDocument(src)
+          : pdfjs.getDocument({ data: new Uint8Array(src) });
       const pdf = await loadingTask.promise;
       const numPages = pdf.numPages;
 

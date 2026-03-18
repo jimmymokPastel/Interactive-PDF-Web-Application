@@ -38,8 +38,8 @@ export interface WordInteraction {
 }
 
 export interface PDFViewerConfig {
-  /** URL or path to the PDF file */
-  src: string;
+  /** URL/path to the PDF file, or an ArrayBuffer of its bytes (for local file import) */
+  src: string | ArrayBuffer;
   /** List of interactive word behaviors */
   interactions: WordInteraction[];
 }
