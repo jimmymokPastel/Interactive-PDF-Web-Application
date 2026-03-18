@@ -3,74 +3,96 @@
 << /Type /Catalog /Pages 2 0 R >>
 endobj
 2 0 obj
-<< /Type /Pages /Kids [3 0 R 6 0 R] /Count 2 >>
+<< /Type /Pages /Kids [21 0 R 23 0 R] /Count 2 >>
 endobj
-3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 9 0 R >> >> >>
-endobj
-4 0 obj
-<< /Length 1569 >>
-stream
-BT /F1 16 Tf 50 780 Td (Interactive PDF Viewer  --  Feature Demo) Tj ET
-BT /F1 11 Tf 50 750 Td (This document demonstrates all interactive features of the viewer.) Tj ET
-BT /F1 11 Tf 50 720 Td (Highlighted words are clickable. Try tapping them to see what happens!) Tj ET
-BT /F1 13 Tf 50 680 Td (POPUP INTERACTIONS) Tj ET
-BT /F1 11 Tf 50 655 Td (Project managers often take an optimistic view when estimating task timelines.) Tj ET
-BT /F1 11 Tf 50 635 Td (Being optimistic can lead to underestimating risks and overrunning schedules.) Tj ET
-BT /F1 11 Tf 50 610 Td (The duration of a task is the calendar time from start to finish.) Tj ET
-BT /F1 11 Tf 50 590 Td (A task's duration differs from the effort required to complete it.) Tj ET
-BT /F1 11 Tf 50 570 Td (Understanding duration helps teams plan realistic project schedules.) Tj ET
-BT /F1 13 Tf 50 530 Td (CHOICE INTERACTION) Tj ET
-BT /F1 11 Tf 50 505 Td (The standup meeting lasts only 15 minutes each morning.) Tj ET
-BT /F1 11 Tf 50 485 Td (Each sprint retrospective takes about 60 minutes to complete.) Tj ET
-BT /F1 11 Tf 50 465 Td (A single minute of silence was observed before the presentation.) Tj ET
-BT /F1 13 Tf 50 420 Td (HOW TO USE) Tj ET
-BT /F1 11 Tf 50 395 Td (1. Click a blue-highlighted word to open a popup definition.) Tj ET
-BT /F1 11 Tf 50 375 Td (2. Click a yellow-highlighted word to answer a multiple-choice question.) Tj ET
-BT /F1 11 Tf 50 355 Td (3. Click the highlight again (or the X button) to close the popup.) Tj ET
-BT /F1 11 Tf 50 310 Td (Scroll down to Page 2 for more examples.) Tj ET
-endstream
-endobj
-6 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 7 0 R /Resources << /Font << /F1 9 0 R >> >> >>
-endobj
-7 0 obj
-<< /Length 1334 >>
-stream
-BT /F1 16 Tf 50 780 Td (Page 2  --  Additional Examples) Tj ET
-BT /F1 13 Tf 50 750 Td (Project Scheduling Concepts) Tj ET
-BT /F1 11 Tf 50 720 Td (An optimistic estimate assumes ideal conditions with no unexpected delays.) Tj ET
-BT /F1 11 Tf 50 700 Td (The pessimistic estimate, by contrast, accounts for the worst-case scenario.) Tj ET
-BT /F1 11 Tf 50 670 Td (Calculating the expected duration requires both estimates and a most-likely value.) Tj ET
-BT /F1 11 Tf 50 645 Td (The PERT formula blends optimistic, most-likely, and pessimistic duration values.) Tj ET
-BT /F1 13 Tf 50 600 Td (Time Units Quiz) Tj ET
-BT /F1 11 Tf 50 575 Td (How long is a short stand-up? Typically 15 minutes.) Tj ET
-BT /F1 11 Tf 50 555 Td (How long is a focus block?  Usually 25 minutes (Pomodoro technique).) Tj ET
-BT /F1 11 Tf 50 535 Td (How long does a minute feel when you are waiting? Much longer than 60 seconds!) Tj ET
-BT /F1 13 Tf 50 495 Td (Glossary) Tj ET
-BT /F1 11 Tf 50 470 Td (optimistic  (adj.)  Hopeful; assuming the best possible outcome.) Tj ET
-BT /F1 11 Tf 50 450 Td (duration    (n.)    The period of time during which something continues.) Tj ET
-BT /F1 11 Tf 50 430 Td (minute      (n.)    A unit of time equal to 60 seconds.) Tj ET
-BT /F1 11 Tf 50 390 Td (Try clicking each highlighted term on both pages to explore all features.) Tj ET
-endstream
-endobj
-9 0 obj
+10 0 obj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
 endobj
+11 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+20 0 obj
+<< /Length 1702 >>
+stream
+BT /F2 16 Tf 50 790 Td (Interactive PDF Viewer  -  Feature Demo) Tj ET
+BT /F1 10 Tf 50 765 Td (This document shows all three interaction types.) Tj ET
+BT /F1 10 Tf 50 750 Td (Blue highlights = popup definition. Yellow chips = fill-in-the-blank quiz.) Tj ET
+BT /F2 13 Tf 50 715 Td (1.  Popup Definitions  \(click a blue word\)) Tj ET
+BT /F1 10 Tf 50 702 Td (________________________________________________) Tj ET
+BT /F1 11 Tf 50 685 Td (Project managers often take an optimistic view when estimating timelines.) Tj ET
+BT /F1 11 Tf 50 665 Td (Being optimistic can lead to underestimating risks in a project.) Tj ET
+BT /F1 11 Tf 50 640 Td (The duration of a task is the calendar time from its start to finish.) Tj ET
+BT /F1 11 Tf 50 620 Td (A short duration does not mean less effort - the two are distinct concepts.) Tj ET
+BT /F1 11 Tf 50 600 Td (Calculating expected duration uses optimistic, likely, and pessimistic values.) Tj ET
+BT /F2 13 Tf 50 560 Td (2.  Fill in the Blank  \(click a chip to select your answer\)) Tj ET
+BT /F1 10 Tf 50 547 Td (________________________________________________) Tj ET
+BT /F1 11 Tf 50 528 Td (Instructions: Each sentence below has a word replaced by answer choices.) Tj ET
+BT /F1 10 Tf 50 510 Td (Click the correct chip directly on the page to submit your answer.) Tj ET
+BT /F1 11 Tf 50 485 Td (Q1.  The daily stand-up usually takes only 15 [minute / minutes] to complete.) Tj ET
+BT /F1 11 Tf 50 460 Td (Q2.  Each retrospective takes about 60 [minute / minutes] at the sprint end.) Tj ET
+BT /F1 11 Tf 50 435 Td (Q3.  Wait one [minute / minutes] - I need to check the schedule before we start.) Tj ET
+BT /F2 10 Tf 50 400 Td (Scroll to Page 2 for more examples.) Tj ET
+endstream
+endobj
+21 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 20 0 R /Resources << /Font << /F1 10 0 R /F2 11 0 R >> >> >>
+endobj
+22 0 obj
+<< /Length 1752 >>
+stream
+BT /F2 16 Tf 50 790 Td (Page 2  -  More Examples) Tj ET
+BT /F2 13 Tf 50 755 Td (3.  More Popup Words) Tj ET
+BT /F1 10 Tf 50 742 Td (________________________________________________) Tj ET
+BT /F1 11 Tf 50 725 Td (An optimistic estimate assumes ideal conditions with no unexpected delays.) Tj ET
+BT /F1 11 Tf 50 705 Td (The pessimistic estimate accounts for worst-case scenarios and buffer time.) Tj ET
+BT /F1 11 Tf 50 680 Td (The PERT formula blends optimistic, likely, and pessimistic duration estimates.) Tj ET
+BT /F1 11 Tf 50 655 Td (Tracking actual versus planned duration exposes scheduling problems early.) Tj ET
+BT /F2 13 Tf 50 615 Td (4.  More Fill-in-the-Blank) Tj ET
+BT /F1 10 Tf 50 602 Td (________________________________________________) Tj ET
+BT /F1 11 Tf 50 583 Td (Instructions: Choose the correct form of the time word in each sentence.) Tj ET
+BT /F1 11 Tf 50 558 Td (Q4.  A Pomodoro focus block lasts exactly 25 [minute / minutes] of deep work.) Tj ET
+BT /F1 11 Tf 50 533 Td (Q5.  How long is a [minute / minutes]?  Exactly sixty seconds.) Tj ET
+BT /F1 11 Tf 50 508 Td (Q6.  The meeting overran by one [minute / minutes] past the scheduled end time.) Tj ET
+BT /F2 13 Tf 50 468 Td (5.  Glossary) Tj ET
+BT /F1 10 Tf 50 455 Td (________________________________________________) Tj ET
+BT /F1 11 Tf 50 438 Td (optimistic  \(adj.\)  Hopeful; assuming the best possible outcome.) Tj ET
+BT /F1 11 Tf 50 418 Td (duration    \(n.\)    The period of time during which something continues.) Tj ET
+BT /F1 11 Tf 50 398 Td (minute      \(n.\)    A unit of time equal to 60 seconds.) Tj ET
+BT /F1 11 Tf 50 378 Td (minutes     \(n.\)    Plural of minute; also the written record of a meeting.) Tj ET
+BT /F1 10 Tf 50 340 Td (End of demo document.) Tj ET
+endstream
+endobj
+23 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 22 0 R /Resources << /Font << /F1 10 0 R /F2 11 0 R >> >> >>
+endobj
 xref
-0 10
+0 24
 0000000000 65535 f 
 0000000009 00000 n 
 0000000058 00000 n 
-0000000121 00000 n 
-0000000247 00000 n 
 0000000000 65535 f 
-0000001868 00000 n 
-0000001994 00000 n 
 0000000000 65535 f 
-0000003380 00000 n 
+0000000000 65535 f 
+0000000000 65535 f 
+0000000000 65535 f 
+0000000000 65535 f 
+0000000000 65535 f 
+0000000123 00000 n 
+0000000221 00000 n 
+0000000000 65535 f 
+0000000000 65535 f 
+0000000000 65535 f 
+0000000000 65535 f 
+0000000000 65535 f 
+0000000000 65535 f 
+0000000000 65535 f 
+0000000000 65535 f 
+0000000324 00000 n 
+0000002079 00000 n 
+0000002219 00000 n 
+0000004024 00000 n 
 trailer
-<< /Size 10 /Root 1 0 R >>
+<< /Size 24 /Root 1 0 R >>
 startxref
-3477
+4164
 %%EOF

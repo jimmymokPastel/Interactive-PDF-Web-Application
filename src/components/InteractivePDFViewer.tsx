@@ -142,9 +142,9 @@ function PopupOverlay({
 }
 
 // ---------------------------------------------------------------------------
-// Sub-component: Choice overlay
+// Sub-component: Inline choice chips (rendered directly on the document)
 // ---------------------------------------------------------------------------
-function ChoiceOverlay({
+function InlineChoiceChips({
   options,
   state,
   onSelect,
@@ -162,55 +162,61 @@ function ChoiceOverlay({
 
   return (
     <div
-      className="absolute z-30 bg-white border border-gray-300 rounded shadow-lg p-3 text-sm"
-      style={{ bottom: "110%", left: "50%", transform: "translateX(-50%)", minWidth: 200 }}
+      className="absolute z-20 flex flex-row flex-wrap items-center gap-0.5"
+      style={{ top: 0, left: 0, whiteSpace: "nowrap" }}
       onClick={(e) => e.stopPropagation()}
     >
-      <p className="font-semibold text-gray-700 mb-2">Select the correct word:</p>
-      <div className="flex flex-col gap-1">
-        {options.map((opt) => {
-          const isSelected = state.selected === opt.label;
-          let btnClass =
-            "px-3 py-1 rounded border text-left transition-colors font-medium ";
+      {options.map((opt) => {
+        const isSelected = state.selected === opt.label;
 
-          if (state.locked && isSelected) {
-            btnClass += opt.correct
-              ? "bg-green-100 border-green-500 text-green-800"
-              : "bg-red-100 border-red-500 text-red-800";
-          } else if (state.locked && opt.correct) {
-            btnClass += "bg-green-50 border-green-400 text-green-700";
+        let chipClass =
+          "inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded border text-[10px] leading-none font-semibold cursor-pointer select-none transition-colors ";
+
+        if (state.locked) {
+          if (isSelected && opt.correct) {
+            chipClass += "bg-green-100 border-green-500 text-green-800";
+          } else if (isSelected && !opt.correct) {
+            chipClass += "bg-red-100 border-red-500 text-red-800";
+          } else if (!isSelected && opt.correct) {
+            chipClass += "bg-green-50 border-green-400 text-green-700";
           } else {
-            btnClass += "bg-gray-50 border-gray-300 text-gray-700 hover:bg-blue-50 hover:border-blue-400";
+            chipClass += "bg-gray-50 border-gray-200 text-gray-400";
           }
+        } else {
+          chipClass += "bg-white border-gray-300 text-gray-700 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700";
+        }
 
-          return (
-            <button
-              key={opt.label}
-              className={btnClass}
-              onClick={() => !state.locked && onSelect(opt.label)}
-              disabled={state.locked}
-            >
-              {state.locked && isSelected && (
-                <span className="mr-1">{opt.correct ? "✓" : "✗"}</span>
-              )}
-              {state.locked && !isSelected && opt.correct && (
-                <span className="mr-1 text-green-600">✓</span>
-              )}
-              {opt.label}
-            </button>
-          );
-        })}
-      </div>
+        return (
+          <button
+            key={opt.label}
+            className={chipClass}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!state.locked) onSelect(opt.label);
+            }}
+            disabled={state.locked}
+            title={state.locked ? undefined : "Select this answer"}
+          >
+            {state.locked && isSelected && (
+              <span>{opt.correct ? "✓" : "✗"}</span>
+            )}
+            {state.locked && !isSelected && opt.correct && (
+              <span>✓</span>
+            )}
+            {opt.label}
+          </button>
+        );
+      })}
       {state.locked && state.selected && (
-        <div
-          className={`mt-2 text-xs font-semibold px-2 py-1 rounded ${
+        <span
+          className={`ml-1 text-[9px] font-bold px-1 py-0.5 rounded ${
             isCorrect ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
           }`}
         >
           {isCorrect
             ? (feedbackCorrect ?? "Correct!")
-            : (feedbackIncorrect ?? "Incorrect — the correct answer is highlighted.")}
-        </div>
+            : (feedbackIncorrect ?? "Wrong")}
+        </span>
       )}
     </div>
   );
@@ -334,31 +340,18 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
 
   const handleRegionClick = (region: InteractiveRegion, regionKey: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const interaction = config.interactions[region.interactionIndex];
-
-    if (interaction.interaction.type === "popup") {
-      const isOpen = !!popupStates[regionKey]?.open;
-      // Close all others, then toggle this one
-      setPopupStates((prev) => {
-        const next: Record<string, PopupState> = {};
-        for (const k of Object.keys(prev)) {
-          next[k] = { ...prev[k], open: false };
-        }
-        next[regionKey] = { open: !isOpen, regionKey };
-        return next;
-      });
-    } else if (interaction.interaction.type === "choice") {
-      if (choiceStates[regionKey]?.locked) return;
-      const isOpen = !!popupStates[regionKey]?.open;
-      setPopupStates((prev) => {
-        const next: Record<string, PopupState> = {};
-        for (const k of Object.keys(prev)) {
-          next[k] = { ...prev[k], open: false };
-        }
-        next[regionKey] = { open: !isOpen, regionKey };
-        return next;
-      });
-    }
+    // Only popup interactions use a click-to-toggle highlight
+    if (config.interactions[region.interactionIndex].interaction.type !== "popup") return;
+    const isOpen = !!popupStates[regionKey]?.open;
+    // Close all others, then toggle this one
+    setPopupStates((prev) => {
+      const next: Record<string, PopupState> = {};
+      for (const k of Object.keys(prev)) {
+        next[k] = { ...prev[k], open: false };
+      }
+      next[regionKey] = { open: !isOpen, regionKey };
+      return next;
+    });
   };
 
   const handleChoiceSelect = (regionKey: string, label: string) => {
@@ -432,6 +425,41 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
               const choiceState = choiceStates[key] ?? { selected: null, locked: false };
               const isLocked = choiceState.locked;
 
+              if (isChoice) {
+                // Choice: render inline chips directly on the document at the word position.
+                // No highlight box — chips are always visible and replace the word visually.
+                const choiceInteraction = interaction.interaction as {
+                  type: "choice";
+                  options: ChoiceOption[];
+                  feedbackCorrect?: string;
+                  feedbackIncorrect?: string;
+                };
+                return (
+                  <div
+                    key={key}
+                    className="absolute"
+                    style={{
+                      left: `${region.x}%`,
+                      top: `${region.y}%`,
+                      // Width is unconstrained so chips can overflow the matched word width
+                      width: 0,
+                      height: `${region.h}%`,
+                      minHeight: 16,
+                      overflow: "visible",
+                    }}
+                  >
+                    <InlineChoiceChips
+                      options={choiceInteraction.options}
+                      state={choiceState}
+                      onSelect={(label: string) => handleChoiceSelect(key, label)}
+                      feedbackCorrect={choiceInteraction.feedbackCorrect}
+                      feedbackIncorrect={choiceInteraction.feedbackIncorrect}
+                    />
+                  </div>
+                );
+              }
+
+              // Popup: keep the clickable highlight + floating popup behaviour
               return (
                 <div
                   key={key}
@@ -445,37 +473,18 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
                     minHeight: 16,
                   }}
                 >
-                  {/* Clickable highlight */}
                   <div
                     className={`
-                      w-full h-full cursor-pointer rounded-sm
-                      ${isLocked && choiceState.selected
-                        ? choiceState.selected &&
-                          (interaction.interaction as { type: string; options?: ChoiceOption[] }).options?.find(
-                            (o: ChoiceOption) => o.label === choiceState.selected
-                          )?.correct
-                          ? "bg-green-400/30 border border-green-500"
-                          : "bg-red-400/30 border border-red-400"
-                        : isPopupOpen
+                      w-full h-full cursor-pointer rounded-sm transition-colors
+                      ${isPopupOpen
                         ? "bg-blue-300/40 border border-blue-500"
-                        : isChoice
-                        ? "bg-yellow-200/50 border border-yellow-400 hover:bg-yellow-300/60"
                         : "bg-blue-200/40 border border-blue-400 hover:bg-blue-300/50"
                       }
-                      transition-colors
                     `}
                     onClick={(e) => handleRegionClick(region, key, e)}
-                    title={
-                      isChoice
-                        ? "Click to select an answer"
-                        : isPopupOpen
-                        ? "Click to close"
-                        : "Click for more info"
-                    }
+                    title={isPopupOpen ? "Click to close" : "Click for more info"}
                   />
-
-                  {/* Popup or choice panel */}
-                  {isPopupOpen && interaction.interaction.type === "popup" && (
+                  {isPopupOpen && (
                     <PopupOverlay
                       content={(interaction.interaction as { type: "popup"; content: string }).content}
                       onClose={() =>
@@ -483,37 +492,6 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
                           ...prev,
                           [key]: { open: false, regionKey: key },
                         }))
-                      }
-                    />
-                  )}
-
-                  {isPopupOpen && interaction.interaction.type === "choice" && (
-                    <ChoiceOverlay
-                      options={
-                        (
-                          interaction.interaction as {
-                            type: "choice";
-                            options: ChoiceOption[];
-                            feedbackCorrect?: string;
-                            feedbackIncorrect?: string;
-                          }
-                        ).options
-                      }
-                      state={choiceState}
-                      onSelect={(label) => handleChoiceSelect(key, label)}
-                      feedbackCorrect={
-                        (
-                          interaction.interaction as {
-                            feedbackCorrect?: string;
-                          }
-                        ).feedbackCorrect
-                      }
-                      feedbackIncorrect={
-                        (
-                          interaction.interaction as {
-                            feedbackIncorrect?: string;
-                          }
-                        ).feedbackIncorrect
                       }
                     />
                   )}
