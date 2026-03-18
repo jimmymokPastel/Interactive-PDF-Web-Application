@@ -273,12 +273,14 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
     });
   };
 
-  const handleChoiceSelect = (regionKey: string, label: string, interactionIndex: number) => {
-    // Lock ALL choice regions with the same interaction index (same question type)
-    // Extract all region keys that match this interaction
+  const handleChoiceSelect = (regionKey: string, label: string, interactionIndex: number, clickedY: number) => {
+    // Lock only choice regions with the same interaction index AND same row (Y position)
+    // Use a tolerance for Y comparison since positions may have small differences
+    const yTolerance = 2; // percentage points
     const keysToLock: string[] = [];
-    regions.forEach((r, idx) => {
-      if (r.interactionIndex === interactionIndex) {
+    
+    regions.forEach((r) => {
+      if (r.interactionIndex === interactionIndex && Math.abs(r.y - clickedY) <= yTolerance) {
         // Rebuild the key using same logic as getRegionKey
         const pageRegions = regions.filter((pr) => pr.pageNum === r.pageNum);
         const matchIndex = pageRegions.indexOf(r);
@@ -384,7 +386,7 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
                     onClick={(e) => {
                       e.stopPropagation();
                       if (!isLocked) {
-                        handleChoiceSelect(key, region.matchedText, region.interactionIndex);
+                        handleChoiceSelect(key, region.matchedText, region.interactionIndex, region.y);
                       }
                     }}
                     title={isLocked ? undefined : "Click to select answer"}
