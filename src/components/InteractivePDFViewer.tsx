@@ -222,14 +222,6 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
   const [popupStates, setPopupStates] = useState<Record<string, PopupState>>({});
   const [choiceStates, setChoiceStates] = useState<Record<string, ChoiceState>>({});
   const renderInProgress = useRef(false);
-  // Track the previous source so we can reset interaction state on file change
-  const prevSrcRef = useRef<string | ArrayBuffer | null>(null);
-
-  // Reset interaction state when the PDF source changes
-  if (prevSrcRef.current !== config.src) {
-    prevSrcRef.current = config.src;
-    // These will be batched by React on the first render for a new src
-  }
 
   const renderPDF = useCallback(async () => {
     if (renderInProgress.current) return;
@@ -242,10 +234,9 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
 
     try {
       const pdfjs = await import("pdfjs-dist");
-      pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-        "pdfjs-dist/build/pdf.worker.min.mjs",
-        import.meta.url
-      ).toString();
+      // Use a static public path so Turbopack/webpack don't need to bundle the worker.
+      // The file is copied to public/pdf.worker.min.mjs at build time.
+      pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
       // pdfjs accepts a string URL or a typed-array/ArrayBuffer via `data`
       const src = config.src;
