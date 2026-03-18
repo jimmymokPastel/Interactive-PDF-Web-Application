@@ -274,12 +274,29 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
     });
   };
 
-  const handleChoiceSelect = (regionKey: string, label: string) => {
-    // Only lock the clicked region - show tick/cross only for the selected option
-    setChoiceStates((prev) => ({
-      ...prev,
-      [regionKey]: { selected: label, locked: true },
-    }));
+  const handleChoiceSelect = (regionKey: string, label: string, clickedY: number, interactionIndex: number) => {
+    const yTolerance = 2;
+    
+    // Lock ALL choice regions on the same row AND same interaction
+    // This hides their highlights
+    const keysToLock: string[] = [];
+    regions.forEach((r) => {
+      if (r.interactionIndex === interactionIndex && Math.abs(r.y - clickedY) <= yTolerance) {
+        const pageRegions = regions.filter((pr) => pr.pageNum === r.pageNum);
+        const matchIndex = pageRegions.indexOf(r);
+        keysToLock.push(`p${r.pageNum}-i${r.interactionIndex}-m${matchIndex}`);
+      }
+    });
+
+    setChoiceStates((prev) => {
+      const next = { ...prev };
+      for (const key of keysToLock) {
+        next[key] = { selected: label, locked: true };
+      }
+      return next;
+    });
+    
+    // But only show tick/cross for the clicked region
     setSelectedChoiceKey(regionKey);
   };
 
@@ -372,7 +389,7 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
                     onClick={(e) => {
                       e.stopPropagation();
                       if (!isLocked) {
-                        handleChoiceSelect(key, region.matchedText);
+                        handleChoiceSelect(key, region.matchedText, region.y, region.interactionIndex);
                       }
                     }}
                     title={isLocked ? undefined : "Click to select answer"}
