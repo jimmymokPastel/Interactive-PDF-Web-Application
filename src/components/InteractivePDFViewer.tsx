@@ -322,29 +322,42 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
   const getRegionKey = (region: InteractiveRegion, matchIndex: number) =>
     `p${region.pageNum}-i${region.interactionIndex}-m${matchIndex}`;
 
-  const handleRegionClick = (region: InteractiveRegion, regionKey: string) => {
+  const closeAllPopups = useCallback(() => {
+    setPopupStates((prev) => {
+      const next: Record<string, PopupState> = {};
+      for (const k of Object.keys(prev)) {
+        next[k] = { ...prev[k], open: false };
+      }
+      return next;
+    });
+  }, []);
+
+  const handleRegionClick = (region: InteractiveRegion, regionKey: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     const interaction = config.interactions[region.interactionIndex];
 
     if (interaction.interaction.type === "popup") {
-      // Toggle popup open/closed
-      setPopupStates((prev) => ({
-        ...prev,
-        [regionKey]: {
-          open: !prev[regionKey]?.open,
-          regionKey,
-        },
-      }));
+      const isOpen = !!popupStates[regionKey]?.open;
+      // Close all others, then toggle this one
+      setPopupStates((prev) => {
+        const next: Record<string, PopupState> = {};
+        for (const k of Object.keys(prev)) {
+          next[k] = { ...prev[k], open: false };
+        }
+        next[regionKey] = { open: !isOpen, regionKey };
+        return next;
+      });
     } else if (interaction.interaction.type === "choice") {
-      // If already locked (answer selected), do nothing — choice is final
       if (choiceStates[regionKey]?.locked) return;
-      // Otherwise toggle the choice panel open/closed
-      setPopupStates((prev) => ({
-        ...prev,
-        [regionKey]: {
-          open: !prev[regionKey]?.open,
-          regionKey,
-        },
-      }));
+      const isOpen = !!popupStates[regionKey]?.open;
+      setPopupStates((prev) => {
+        const next: Record<string, PopupState> = {};
+        for (const k of Object.keys(prev)) {
+          next[k] = { ...prev[k], open: false };
+        }
+        next[regionKey] = { open: !isOpen, regionKey };
+        return next;
+      });
     }
   };
 
@@ -398,7 +411,7 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
   }
 
   return (
-    <div className="flex flex-col items-center bg-gray-200 min-h-screen py-6 px-2">
+    <div className="flex flex-col items-center bg-gray-200 min-h-screen py-6 px-2" onClick={closeAllPopups}>
       <div className="w-full max-w-4xl">
         {pages.map((page) => (
           <div key={page.pageNum} className="relative mb-6 shadow-xl" style={{ lineHeight: 0 }}>
@@ -451,7 +464,7 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
                       }
                       transition-colors
                     `}
-                    onClick={() => handleRegionClick(region, key)}
+                    onClick={(e) => handleRegionClick(region, key, e)}
                     title={
                       isChoice
                         ? "Click to select an answer"
