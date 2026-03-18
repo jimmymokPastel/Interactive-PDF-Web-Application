@@ -52,8 +52,10 @@ const INTERACTIONS: PDFViewerConfig["interactions"] = [
 // ---------------------------------------------------------------------------
 function ImportScreen({
   onFile,
+  onSample,
 }: {
   onFile: (buf: ArrayBuffer, name: string) => void;
+  onSample: () => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
@@ -181,8 +183,38 @@ function ImportScreen({
           <p className="mt-3 text-center text-sm text-red-600">{error}</p>
         )}
 
-        <p className="mt-4 text-center text-xs text-gray-400">
-          The file is processed entirely in your browser — nothing is uploaded.
+        {/* Divider */}
+        <div className="flex items-center gap-3 mt-5">
+          <div className="flex-1 border-t border-gray-200" />
+          <span className="text-xs text-gray-400 select-none">or</span>
+          <div className="flex-1 border-t border-gray-200" />
+        </div>
+
+        {/* Sample PDF button */}
+        <button
+          onClick={onSample}
+          className="mt-4 w-full flex items-center justify-center gap-2 rounded-lg border border-blue-300 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-100 hover:border-blue-400 transition-colors"
+        >
+          <svg
+            className="w-4 h-4 shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M8 12l4 4 4-4M12 4v12"
+            />
+          </svg>
+          Try the sample PDF
+        </button>
+
+        <p className="mt-3 text-center text-xs text-gray-400">
+          The sample demonstrates popup definitions and multiple-choice interactions.
+          Your own files are processed entirely in your browser — nothing is uploaded.
         </p>
       </div>
     </div>
@@ -206,8 +238,19 @@ export default function PDFPage() {
     setFileName(null);
   }, []);
 
+  const handleSample = useCallback(async () => {
+    try {
+      const res = await fetch("/sample.pdf");
+      if (!res.ok) throw new Error(`Failed to fetch sample: ${res.status}`);
+      const buf = await res.arrayBuffer();
+      handleFile(buf, "sample.pdf");
+    } catch (err) {
+      console.error("Could not load sample PDF:", err);
+    }
+  }, [handleFile]);
+
   if (!pdfSource) {
-    return <ImportScreen onFile={handleFile} />;
+    return <ImportScreen onFile={handleFile} onSample={handleSample} />;
   }
 
   const config: PDFViewerConfig = {

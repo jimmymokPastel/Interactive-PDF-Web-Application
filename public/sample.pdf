@@ -1,0 +1,76 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 6 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 9 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1569 >>
+stream
+BT /F1 16 Tf 50 780 Td (Interactive PDF Viewer  --  Feature Demo) Tj ET
+BT /F1 11 Tf 50 750 Td (This document demonstrates all interactive features of the viewer.) Tj ET
+BT /F1 11 Tf 50 720 Td (Highlighted words are clickable. Try tapping them to see what happens!) Tj ET
+BT /F1 13 Tf 50 680 Td (POPUP INTERACTIONS) Tj ET
+BT /F1 11 Tf 50 655 Td (Project managers often take an optimistic view when estimating task timelines.) Tj ET
+BT /F1 11 Tf 50 635 Td (Being optimistic can lead to underestimating risks and overrunning schedules.) Tj ET
+BT /F1 11 Tf 50 610 Td (The duration of a task is the calendar time from start to finish.) Tj ET
+BT /F1 11 Tf 50 590 Td (A task's duration differs from the effort required to complete it.) Tj ET
+BT /F1 11 Tf 50 570 Td (Understanding duration helps teams plan realistic project schedules.) Tj ET
+BT /F1 13 Tf 50 530 Td (CHOICE INTERACTION) Tj ET
+BT /F1 11 Tf 50 505 Td (The standup meeting lasts only 15 minutes each morning.) Tj ET
+BT /F1 11 Tf 50 485 Td (Each sprint retrospective takes about 60 minutes to complete.) Tj ET
+BT /F1 11 Tf 50 465 Td (A single minute of silence was observed before the presentation.) Tj ET
+BT /F1 13 Tf 50 420 Td (HOW TO USE) Tj ET
+BT /F1 11 Tf 50 395 Td (1. Click a blue-highlighted word to open a popup definition.) Tj ET
+BT /F1 11 Tf 50 375 Td (2. Click a yellow-highlighted word to answer a multiple-choice question.) Tj ET
+BT /F1 11 Tf 50 355 Td (3. Click the highlight again (or the X button) to close the popup.) Tj ET
+BT /F1 11 Tf 50 310 Td (Scroll down to Page 2 for more examples.) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 7 0 R /Resources << /Font << /F1 9 0 R >> >> >>
+endobj
+7 0 obj
+<< /Length 1334 >>
+stream
+BT /F1 16 Tf 50 780 Td (Page 2  --  Additional Examples) Tj ET
+BT /F1 13 Tf 50 750 Td (Project Scheduling Concepts) Tj ET
+BT /F1 11 Tf 50 720 Td (An optimistic estimate assumes ideal conditions with no unexpected delays.) Tj ET
+BT /F1 11 Tf 50 700 Td (The pessimistic estimate, by contrast, accounts for the worst-case scenario.) Tj ET
+BT /F1 11 Tf 50 670 Td (Calculating the expected duration requires both estimates and a most-likely value.) Tj ET
+BT /F1 11 Tf 50 645 Td (The PERT formula blends optimistic, most-likely, and pessimistic duration values.) Tj ET
+BT /F1 13 Tf 50 600 Td (Time Units Quiz) Tj ET
+BT /F1 11 Tf 50 575 Td (How long is a short stand-up? Typically 15 minutes.) Tj ET
+BT /F1 11 Tf 50 555 Td (How long is a focus block?  Usually 25 minutes (Pomodoro technique).) Tj ET
+BT /F1 11 Tf 50 535 Td (How long does a minute feel when you are waiting? Much longer than 60 seconds!) Tj ET
+BT /F1 13 Tf 50 495 Td (Glossary) Tj ET
+BT /F1 11 Tf 50 470 Td (optimistic  (adj.)  Hopeful; assuming the best possible outcome.) Tj ET
+BT /F1 11 Tf 50 450 Td (duration    (n.)    The period of time during which something continues.) Tj ET
+BT /F1 11 Tf 50 430 Td (minute      (n.)    A unit of time equal to 60 seconds.) Tj ET
+BT /F1 11 Tf 50 390 Td (Try clicking each highlighted term on both pages to explore all features.) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000121 00000 n 
+0000000247 00000 n 
+0000000000 65535 f 
+0000001868 00000 n 
+0000001994 00000 n 
+0000000000 65535 f 
+0000003380 00000 n 
+trailer
+<< /Size 10 /Root 1 0 R >>
+startxref
+3477
+%%EOF
