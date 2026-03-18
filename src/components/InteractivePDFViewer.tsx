@@ -273,17 +273,26 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
     });
   };
 
-  const handleChoiceSelect = (regionKey: string, label: string) => {
-    // Lock the answer — it cannot be changed
-    setChoiceStates((prev) => ({
-      ...prev,
-      [regionKey]: { selected: label, locked: true },
-    }));
-    // Keep the panel visible so user can see the result
-    setPopupStates((prev) => ({
-      ...prev,
-      [regionKey]: { open: true, regionKey },
-    }));
+  const handleChoiceSelect = (regionKey: string, label: string, interactionIndex: number) => {
+    // Lock ALL choice regions with the same interaction index (same question type)
+    // Extract all region keys that match this interaction
+    const keysToLock: string[] = [];
+    regions.forEach((r, idx) => {
+      if (r.interactionIndex === interactionIndex) {
+        // Rebuild the key using same logic as getRegionKey
+        const pageRegions = regions.filter((pr) => pr.pageNum === r.pageNum);
+        const matchIndex = pageRegions.indexOf(r);
+        keysToLock.push(`p${r.pageNum}-i${r.interactionIndex}-m${matchIndex}`);
+      }
+    });
+
+    setChoiceStates((prev) => {
+      const next = { ...prev };
+      for (const key of keysToLock) {
+        next[key] = { selected: label, locked: true };
+      }
+      return next;
+    });
   };
 
   if (loading) {
@@ -375,7 +384,7 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
                     onClick={(e) => {
                       e.stopPropagation();
                       if (!isLocked) {
-                        handleChoiceSelect(key, region.matchedText);
+                        handleChoiceSelect(key, region.matchedText, region.interactionIndex);
                       }
                     }}
                     title={isLocked ? undefined : "Click to select answer"}
