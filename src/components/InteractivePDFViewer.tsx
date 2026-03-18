@@ -151,6 +151,7 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
   const [error, setError] = useState<string | null>(null);
   const [popupStates, setPopupStates] = useState<Record<string, PopupState>>({});
   const [choiceStates, setChoiceStates] = useState<Record<string, ChoiceState>>({});
+  const [selectedChoiceKey, setSelectedChoiceKey] = useState<string | null>(null);
   const renderInProgress = useRef(false);
 
   const renderPDF = useCallback(async () => {
@@ -273,28 +274,13 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
     });
   };
 
-  const handleChoiceSelect = (regionKey: string, label: string, interactionIndex: number, clickedY: number) => {
-    // Lock only choice regions with the same interaction index AND same row (Y position)
-    // Use a tolerance for Y comparison since positions may have small differences
-    const yTolerance = 2; // percentage points
-    const keysToLock: string[] = [];
-    
-    regions.forEach((r) => {
-      if (r.interactionIndex === interactionIndex && Math.abs(r.y - clickedY) <= yTolerance) {
-        // Rebuild the key using same logic as getRegionKey
-        const pageRegions = regions.filter((pr) => pr.pageNum === r.pageNum);
-        const matchIndex = pageRegions.indexOf(r);
-        keysToLock.push(`p${r.pageNum}-i${r.interactionIndex}-m${matchIndex}`);
-      }
-    });
-
-    setChoiceStates((prev) => {
-      const next = { ...prev };
-      for (const key of keysToLock) {
-        next[key] = { selected: label, locked: true };
-      }
-      return next;
-    });
+  const handleChoiceSelect = (regionKey: string, label: string) => {
+    // Only lock the clicked region - show tick/cross only for the selected option
+    setChoiceStates((prev) => ({
+      ...prev,
+      [regionKey]: { selected: label, locked: true },
+    }));
+    setSelectedChoiceKey(regionKey);
   };
 
   if (loading) {
@@ -386,7 +372,7 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
                     onClick={(e) => {
                       e.stopPropagation();
                       if (!isLocked) {
-                        handleChoiceSelect(key, region.matchedText, region.interactionIndex, region.y);
+                        handleChoiceSelect(key, region.matchedText);
                       }
                     }}
                     title={isLocked ? undefined : "Click to select answer"}
@@ -394,7 +380,7 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
                     {showHighlight && (
                       <div className="w-full h-full cursor-pointer rounded-sm bg-yellow-200/60 border border-yellow-400 hover:bg-yellow-300/70 transition-colors" />
                     )}
-                    {isLocked && (
+                    {isLocked && key === selectedChoiceKey && (
                       <span
                         className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-xs font-bold rounded-full text-white ${
                           isCorrect ? "bg-green-500" : "bg-red-500"
