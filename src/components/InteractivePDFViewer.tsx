@@ -151,7 +151,7 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
   const [error, setError] = useState<string | null>(null);
   const [popupStates, setPopupStates] = useState<Record<string, PopupState>>({});
   const [choiceStates, setChoiceStates] = useState<Record<string, ChoiceState>>({});
-  const [selectedChoiceKey, setSelectedChoiceKey] = useState<string | null>(null);
+  const [selectedChoiceKeys, setSelectedChoiceKeys] = useState<Set<string>>(new Set());
   const renderInProgress = useRef(false);
 
   const renderPDF = useCallback(async () => {
@@ -296,8 +296,8 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
       return next;
     });
     
-    // But only show tick/cross for the clicked region
-    setSelectedChoiceKey(regionKey);
+    // Add to selected keys so tick/cross persists
+    setSelectedChoiceKeys((prev) => new Set(prev).add(regionKey));
   };
 
   if (loading) {
@@ -397,7 +397,7 @@ export default function InteractivePDFViewer({ config }: { config: PDFViewerConf
                     {showHighlight && (
                       <div className="w-full h-full cursor-pointer rounded-sm bg-yellow-200/60 border border-yellow-400 hover:bg-yellow-300/70 transition-colors" />
                     )}
-                    {isLocked && key === selectedChoiceKey && (
+                    {isLocked && selectedChoiceKeys.has(key) && (
                       <span
                         className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-xs font-bold rounded-full text-white ${
                           isCorrect ? "bg-green-500" : "bg-red-500"
