@@ -59,44 +59,49 @@ function findTextMatches(
   for (const item of textItems) {
     if (!item.str.trim()) continue;
 
-    let matches = false;
-    let matchedText = item.str;
-
+    // Build a regex that captures the match position within the item string
+    let re: RegExp;
     if (typeof pattern === "string") {
-      // Case-insensitive whole-word match
-      const re = new RegExp(`\\b${escapeRegex(pattern)}\\b`, "i");
-      matches = re.test(item.str);
-      matchedText = item.str;
+      re = new RegExp(`\\b${escapeRegex(pattern)}\\b`, "gi");
     } else {
-      // Reset lastIndex for stateful regexes (global/sticky flags)
-      if (pattern.global || pattern.sticky) pattern.lastIndex = 0;
-      matches = pattern.test(item.str);
-      matchedText = item.str;
+      // Ensure global flag so we can iterate all occurrences
+      const flags = pattern.flags.includes("g") ? pattern.flags : pattern.flags + "g";
+      re = new RegExp(pattern.source, flags);
     }
 
-    if (matches) {
+    re.lastIndex = 0;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(item.str)) !== null) {
+      const matchStart = m.index;
+      const matchLen = m[0].length;
+      const itemLen = item.str.length;
+
       // PDF transform matrix: [a, b, c, d, e, f]
-      // e = x translation, f = y translation (PDF coords, origin bottom-left)
-      // a/d = scale factors (font size can be derived from |d|)
       const [a, , , d, tx, ty] = item.transform;
-      // Use the item's actual height if available, fall back to |d| (font size)
       const itemHeight = item.height > 0 ? item.height : Math.abs(d) || Math.abs(a);
       const itemWidth = item.width > 0 ? item.width : 0;
 
+      // Approximate x-offset and width of the matched substring using
+      // character-position ratio (assumes uniform character spacing — good
+      // enough for proportional fonts at this highlight granularity).
+      const charRatioStart = itemLen > 0 ? matchStart / itemLen : 0;
+      const charRatioLen = itemLen > 0 ? matchLen / itemLen : 1;
+      const matchPdfX = tx + itemWidth * charRatioStart;
+      const matchPdfW = itemWidth * charRatioLen;
+
       // Convert from PDF space (bottom-left origin) to canvas space (top-left origin)
       const scale = pageViewport.scale;
-      const canvasX = tx * scale;
-      // ty is the baseline in PDF coords; subtract itemHeight to get top of glyph
+      const canvasX = matchPdfX * scale;
       const canvasY = pageViewport.height - (ty + itemHeight) * scale;
-      const canvasW = itemWidth * scale;
+      const canvasW = matchPdfW * scale;
       const canvasH = itemHeight * scale;
 
       results.push({
         x: (canvasX / pageViewport.width) * 100,
         y: (canvasY / pageViewport.height) * 100,
-        w: Math.max((canvasW / pageViewport.width) * 100, 3),
+        w: Math.max((canvasW / pageViewport.width) * 100, 2),
         h: Math.max((canvasH / pageViewport.height) * 100, 1.5),
-        text: matchedText,
+        text: m[0],
       });
     }
   }
